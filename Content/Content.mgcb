@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:Button.png
 
+#begin Continue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Continue.png
+
 #begin digitalFont.ttf
 /copy:digitalFont.ttf
 
@@ -226,6 +238,18 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:largeFont.spritefont
+
+#begin Leaderboard (2).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Leaderboard (2).png
 
 #begin Leaderboard.png
 /importer:TextureImporter
@@ -545,6 +569,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:shadowfax4.png
+
+#begin smallFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:smallFont.spritefont
 
 #begin stormfuhr0.png
 /importer:TextureImporter

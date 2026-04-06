@@ -32,7 +32,8 @@ namespace Casino_Game
         //Fonts
         SpriteFont XLFont,
             largeFont,
-            mediumFont;
+            mediumFont,
+            smallFont;
 
         //Backgrounds
         Rectangle backgroundRect,
@@ -63,6 +64,8 @@ namespace Casino_Game
             horse6Color,
             horse7Color,
             horse8Color;
+
+        String horseSelectedString;
 
         //Betting UI
         Rectangle bet1Rect,
@@ -120,7 +123,8 @@ namespace Casino_Game
 
         //Race
         string countdownString,
-            raceTimeString;
+            raceTimeString,
+            leaderboardString;
 
         int countdownTimer,
             changeSpeed,
@@ -133,10 +137,19 @@ namespace Casino_Game
             horseAnimation,
             changeSpeedTimer;
 
-        Rectangle finishLineRect;
+        Rectangle finishLineRect,
+            continueButtonRect;
 
-        Texture2D finishLineTexture,
-            leaderboardTexture;
+        Texture2D selectedHorseTexture,
+            finishLineTexture,
+            leaderboardTexture,
+            podiumTexture,
+            firstPlaceTexture,
+            secondPlaceTexture,
+            thirdPlaceTexture,
+            continueButtonTexture;
+
+        Color continueColor;
 
         Boolean firstPlaceSet,
             secondPlaceSet,
@@ -190,14 +203,19 @@ namespace Casino_Game
             bet2Rect = new Rectangle(750, 440, 380, 200);
             bet3Rect = new Rectangle(1200, 440, 380, 200);
 
+            houseBalance = 1000;
             betAmount = 0;
             horseSelected = 0;
 
             //Race
             countdownString = "3";
             raceTimeString = "0";
+            leaderboardString = "";
 
             finishLineRect = new Rectangle((window.Width + 150), 0, 150, window.Height);
+            continueButtonRect = new Rectangle(1100, 700, 350, 100);
+
+            continueColor = Color.White;
 
             firstPlace = 0;
             secondPlace = 0;
@@ -231,6 +249,7 @@ namespace Casino_Game
             XLFont = Content.Load<SpriteFont>("XLFont");
             largeFont = Content.Load<SpriteFont>("largeFont");
             mediumFont = Content.Load<SpriteFont>("mediumFont");
+            smallFont = Content.Load<SpriteFont>("smallFont");
 
             //Backgrounds
             background2 = Content.Load<Texture2D>("testBackground");
@@ -253,6 +272,8 @@ namespace Casino_Game
             //Race
             finishLineTexture = Content.Load<Texture2D>("end");
             leaderboardTexture = Content.Load<Texture2D>("Leaderboard");
+            podiumTexture = Content.Load<Texture2D>("Leaderboard (2)");
+            continueButtonTexture = Content.Load<Texture2D>("Continue");
 
             //Horses
             stormfuhr1 = Content.Load<Texture2D>("stormfuhr0");
@@ -324,11 +345,43 @@ namespace Casino_Game
 
             if (screen == Screen.Idle)
             {
-                horseSelected = 0;
+                //Backgrounds
+                backgroundRect = window;
+                altBackgroundRect = new Rectangle(0, 0, 4939, window.Height);
+
+                //Selection and betting
 
                 betAmount = 0;
+                horseSelected = 0;
 
-                backgroundRect = window;
+                //Race
+                countdownString = "3";
+                raceTimeString = "0";
+
+                finishLineRect = new Rectangle((window.Width + 150), 0, 150, window.Height);
+
+                firstPlace = 0;
+                secondPlace = 0;
+                thirdPlace = 0;
+
+                firstPlaceSet = false;
+                secondPlaceSet = false;
+                thirdPlaceSet = false;
+
+                elapsedTime = 0;
+                countdownTime = 0;
+                changeSpeedTimer = 0;
+
+                //Horses
+                horseAnimation = 0;
+                stormfuhrRect = new Rectangle(-638, 0, 425, 300);
+                beyonceneighRect = new Rectangle(-638, 100, 425, 300);
+                greasedLightningRect = new Rectangle(-638, 200, 425, 300);
+                twilightSparkleRect = new Rectangle(-638, 300, 425, 300);
+                hoofJackmanRect = new Rectangle(-638, 400, 425, 300);
+                shadowfaxRect = new Rectangle(-638, 500, 425, 300);
+                ponyStarkRect = new Rectangle(-638, 600, 425, 300);
+                potooooooooRect = new Rectangle(-638, 700, 425, 300);
 
                 if (mouseState.LeftButton == ButtonState.Pressed
                     && prevMouseState.LeftButton == ButtonState.Released)
@@ -345,6 +398,8 @@ namespace Casino_Game
                 {
                     horseSelected = 1;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton1;
+                    horseSelectedString = "Stormfuhr";
                 }
                 else if (horse1Rect.Contains(mouseState.Position))
                 {
@@ -360,6 +415,8 @@ namespace Casino_Game
                 {
                     horseSelected = 2;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton2;
+                    horseSelectedString = "Beyonceneigh";
                 }
                 else if (horse2Rect.Contains(mouseState.Position))
                 {
@@ -375,6 +432,8 @@ namespace Casino_Game
                 {
                     horseSelected = 3;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton3;
+                    horseSelectedString = "Greased Lightning";
                 }
                 else if (horse3Rect.Contains(mouseState.Position))
                 {
@@ -390,6 +449,8 @@ namespace Casino_Game
                 {
                     horseSelected = 4;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton4;
+                    horseSelectedString = "Twilight Sparkle";
                 }
                 else if (horse4Rect.Contains(mouseState.Position))
                 {
@@ -405,6 +466,8 @@ namespace Casino_Game
                 {
                     horseSelected = 5;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton5;
+                    horseSelectedString = "Hoof Jackman";
                 }
                 else if (horse5Rect.Contains(mouseState.Position))
                 {
@@ -420,6 +483,8 @@ namespace Casino_Game
                 {
                     horseSelected = 6;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton6;
+                    horseSelectedString = "Shadowfax";
                 }
                 else if (horse6Rect.Contains(mouseState.Position))
                 {
@@ -435,6 +500,8 @@ namespace Casino_Game
                 {
                     horseSelected = 7;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton7;
+                    horseSelectedString = "Pony Stark";
                 }
                 else if (horse7Rect.Contains(mouseState.Position))
                 {
@@ -450,6 +517,8 @@ namespace Casino_Game
                 {
                     horseSelected = 8;
                     screen = Screen.Bet;
+                    selectedHorseTexture = selectionButton8;
+                    horseSelectedString = "Potoooooooo";
                 }
                 else if (horse8Rect.Contains(mouseState.Position))
                 {
@@ -468,6 +537,7 @@ namespace Casino_Game
                 {
                     betAmount = 10;
                     screen = Screen.Race;
+                    houseBalance += 10;
                 }
                 else if (bet1Rect.Contains(mouseState.Position))
                 {
@@ -483,6 +553,7 @@ namespace Casino_Game
                 {
                     betAmount = 50;
                     screen = Screen.Race;
+                    houseBalance += 50;
                 }
                 else if (bet2Rect.Contains(mouseState.Position))
                 {
@@ -498,6 +569,7 @@ namespace Casino_Game
                 {
                     betAmount = 100;
                     screen = Screen.Race;
+                    houseBalance += 100;
                 }
                 else if (bet3Rect.Contains(mouseState.Position))
                 {
@@ -721,41 +793,49 @@ namespace Casino_Game
                         {
                             firstPlace = 1;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton1;
                         }
                         else if (beyonceneighRect.X >= 1200)
                         {
                             firstPlace = 2;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton2;
                         }
                         else if (greasedLightningRect.X >= 1200)
                         {
                             firstPlace = 3;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton3;
                         }
                         else if (twilightSparkleRect.X >= 1200)
                         {
                             firstPlace = 4;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton4;
                         }
                         else if (hoofJackmanRect.X >= 1200)
                         {
                             firstPlace = 5;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton5;
                         }
                         else if (shadowfaxRect.X >= 1200)
                         {
                             firstPlace = 6;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton6;
                         }
                         else if (ponyStarkRect.X >= 1200)
                         {
                             firstPlace = 7;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton7;
                         }
                         else if (potooooooooRect.X >= 1200)
                         {
                             firstPlace = 8;
                             firstPlaceSet = true;
+                            firstPlaceTexture = selectionButton8;
                         }
                     }
                     if (!secondPlaceSet)
@@ -764,41 +844,49 @@ namespace Casino_Game
                         {
                             secondPlace = 1;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton1;
                         }
                         else if (beyonceneighRect.X >= 1200 && firstPlace != 2)
                         {
                             secondPlace = 2;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton2;
                         }
                         else if (greasedLightningRect.X >= 1200 && firstPlace != 3)
                         {
                             secondPlace = 3;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton3;
                         }
                         else if (twilightSparkleRect.X >= 1200 && firstPlace != 4)
                         {
                             secondPlace = 4;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton4;
                         }
                         else if (hoofJackmanRect.X >= 1200 && firstPlace != 5)
                         {
                             secondPlace = 5;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton5;
                         }
                         else if (shadowfaxRect.X >= 1200 && firstPlace != 6)
                         {
                             secondPlace = 6;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton6;
                         }
                         else if (ponyStarkRect.X >= 1200 && firstPlace != 7)
                         {
                             secondPlace = 7;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton7;
                         }
                         else if (potooooooooRect.X >= 1200 && firstPlace != 8)
                         {
                             secondPlace = 8;
                             secondPlaceSet = true;
+                            secondPlaceTexture = selectionButton8;
                         }
                     }
                     if (!thirdPlaceSet)
@@ -807,41 +895,86 @@ namespace Casino_Game
                         {
                             thirdPlace = 1;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton1;
                         }
                         else if (beyonceneighRect.X >= 1200 && firstPlace != 2 && secondPlace != 2)
                         {
                             thirdPlace = 2;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton2;
                         }
                         else if (greasedLightningRect.X >= 1200 && firstPlace != 3 && secondPlace != 3)
                         {
                             thirdPlace = 3;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton3;
                         }
                         else if (twilightSparkleRect.X >= 1200 && firstPlace != 4 && secondPlace != 4)
                         {
                             thirdPlace = 4;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton4;
                         }
                         else if (hoofJackmanRect.X >= 1200 && firstPlace != 5 && secondPlace != 5)
                         {
                             thirdPlace = 5;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton5;
                         }
                         else if (shadowfaxRect.X >= 1200 && firstPlace != 6 && secondPlace != 6)
                         {
                             thirdPlace = 6;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton6;
                         }
                         else if (ponyStarkRect.X >= 1200 && firstPlace != 7 && secondPlace != 7)
                         {
                             thirdPlace = 7;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton7;
                         }
                         else if (potooooooooRect.X >= 1200 && firstPlace != 8 && secondPlace != 8)
                         {
                             thirdPlace = 8;
                             thirdPlaceSet = true;
+                            thirdPlaceTexture = selectionButton8;
+                        }
+                    }
+
+                    else if (firstPlaceSet && secondPlaceSet && thirdPlaceSet)
+                    {
+                        if (firstPlace == horseSelected)
+                        {
+                            leaderboardString = (betAmount * 3).ToString();
+                            houseBalance -= (betAmount * 3);
+                        }
+                        else if (secondPlace == horseSelected)
+                        {
+                            leaderboardString = (betAmount * 2).ToString();
+                            houseBalance -= (betAmount * 2);
+                        }
+                        else if (thirdPlace == horseSelected)
+                        {
+                            leaderboardString = betAmount.ToString();
+                            houseBalance -= betAmount;
+                        }
+                        else
+                        {
+                            leaderboardString = "0";
+                        }
+
+                        if (continueButtonRect.Contains(mouseState.Position) && mouseState.LeftButton == ButtonState.Pressed
+                            && prevMouseState.LeftButton == ButtonState.Released)
+                        {
+                            screen = Screen.Idle;
+                        }
+                        else if (continueButtonRect.Contains(mouseState.Position))
+                        {
+                            continueColor = Color.Green;
+                        }
+                        else
+                        {
+                            continueColor = Color.White;
                         }
                     }
                 }
@@ -934,20 +1067,35 @@ namespace Casino_Game
                 else
                 {
                     _spriteBatch.DrawString(mediumFont, raceTimeString, new Vector2(10, 900), Color.White);
+
+                    _spriteBatch.Draw(selectionButtonTexture, new Rectangle(1550, 900, 332, 60), Color.White);
+                    _spriteBatch.Draw(selectedHorseTexture, new Rectangle(1550, 900, 332, 60), Color.White);
+                    _spriteBatch.DrawString(smallFont, horseSelectedString, new Vector2(1615, 916), Color.White);
+                    _spriteBatch.DrawString(smallFont, "Cheer for", new Vector2(1400, 916), Color.White);
+                    _spriteBatch.DrawString(smallFont, "!", new Vector2(1890, 916), Color.White);
                 }
 
                 if (firstPlaceSet && secondPlaceSet && thirdPlaceSet)
                 {
                     _spriteBatch.Draw(leaderboardTexture, new Rectangle(150, 0, 1600, window.Height), Color.White);
-                    _spriteBatch.DrawString(largeFont, "1st: " + firstPlace, new Vector2(300, 280), Color.White);
-                    _spriteBatch.DrawString(largeFont, "2nd: " + secondPlace, new Vector2(300, 440), Color.White);
-                    _spriteBatch.DrawString(largeFont, "3rd: " + thirdPlace, new Vector2(300, 605), Color.White);
+                    _spriteBatch.Draw(podiumTexture, new Rectangle(300, 300, 625, 503), Color.White);
+
+                    _spriteBatch.Draw(firstPlaceTexture, new Rectangle(513, 150, 1000, 181), Color.White);
+                    _spriteBatch.Draw(secondPlaceTexture, new Rectangle(328, 282, 1000, 181), Color.White);
+                    _spriteBatch.Draw(thirdPlaceTexture, new Rectangle(696, 415, 1000, 181), Color.White);
+
+                    _spriteBatch.DrawString(mediumFont, "You won:", new Vector2(1000, 200), Color.White);
+                    _spriteBatch.DrawString(XLFont, leaderboardString, new Vector2(1000, 300), Color.White);
+
+                    _spriteBatch.Draw(continueButtonTexture, continueButtonRect, Color.White);
+                    _spriteBatch.DrawString(mediumFont, "Continue", new Vector2(continueButtonRect.X + 65, continueButtonRect.Y + 22), continueColor);
                 }
             }
 
-                _spriteBatch.End();
+           _spriteBatch.End();
 
             base.Draw(gameTime);
+            
         }
     }
 }
