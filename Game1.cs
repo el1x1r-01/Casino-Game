@@ -42,6 +42,15 @@ namespace Casino_Game
         Texture2D backgroundTexture,
             background1, background2, raceTrack;
 
+        //Idle screen
+        Rectangle idleRect;
+
+        Texture2D idleTexture;
+
+        int idleHorse, respawnDelay;
+
+        float idleAnimation;
+
         //Selection UI
         Rectangle horse1Rect,
             horse2Rect,
@@ -173,11 +182,19 @@ namespace Casino_Game
             _graphics.PreferredBackBufferHeight = window.Height;
             _graphics.ApplyChanges();
 
-            screen = Screen.SelectHorse;
+            screen = Screen.Idle;
 
             //Backgrounds
             backgroundRect = window;
             altBackgroundRect = new Rectangle(0, 0, 4939, window.Height);
+
+            //Idle screen
+            idleRect = new Rectangle(-638, 0, 425, 300);
+
+            idleTexture = stormfuhr1;
+
+            idleHorse = 1;
+            respawnDelay = 1900;
 
             //Selection UI
             horse1Rect = new Rectangle(200, 300, 664, 120);
@@ -348,13 +365,13 @@ namespace Casino_Game
                 //Backgrounds
                 backgroundRect = window;
                 altBackgroundRect = new Rectangle(0, 0, 4939, window.Height);
+                backgroundTexture = raceTrack;
 
-                //Selection and betting
-
+                //Reset selection and betting
                 betAmount = 0;
                 horseSelected = 0;
 
-                //Race
+                //Reset race
                 countdownString = "3";
                 raceTimeString = "0";
 
@@ -372,7 +389,7 @@ namespace Casino_Game
                 countdownTime = 0;
                 changeSpeedTimer = 0;
 
-                //Horses
+                //Reset horses
                 horseAnimation = 0;
                 stormfuhrRect = new Rectangle(-638, 0, 425, 300);
                 beyonceneighRect = new Rectangle(-638, 100, 425, 300);
@@ -388,8 +405,204 @@ namespace Casino_Game
                 {
                     screen = Screen.SelectHorse;
                 }
+
+                if (idleRect.X > respawnDelay)
+                {
+                    idleRect.X = -638;
+                    idleRect.Y = generator.Next(0, 700);
+
+                    idleHorse = generator.Next(1, 9);
+                    respawnDelay = generator.Next(2500, 4500);
+                }
+                else
+                {
+                    idleRect.X += 10;
+                }
+
+                idleAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (idleAnimation >= 0f && idleAnimation < 0.1f)
+                {
+                    if (idleHorse == 1)
+                    {
+                        idleTexture = stormfuhr1;
+                    }
+                    else if (idleHorse == 2)
+                    {
+                        idleTexture = beyonceneigh1;
+                    }
+                    else if (idleHorse == 3)
+                    {
+                        idleTexture = greasedLightning1;
+                    }
+                    else if (idleHorse == 4)
+                    {
+                        idleTexture = twilightSparkle1;
+                    }
+                    else if (idleHorse == 5)
+                    {
+                        idleTexture = hoofJackman1;
+                    }
+                    else if (idleHorse == 6)
+                    {
+                        idleTexture = shadowfax1;
+                    }
+                    else if (idleHorse == 7)
+                    {
+                        idleTexture = ponyStark1;
+                    }
+                    else if (idleHorse == 8)
+                    {
+                        idleTexture = potoooooooo1;
+                    }
+                }
+                else if (idleAnimation >= 0.1f && idleAnimation < 0.2f)
+                {
+                    if (idleHorse == 1)
+                    {
+                        idleTexture = stormfuhr2;
+                    }
+                    else if (idleHorse == 2)
+                    {
+                        idleTexture = beyonceneigh2;
+                    }
+                    else if (idleHorse == 3)
+                    {
+                        idleTexture = greasedLightning2;
+                    }
+                    else if (idleHorse == 4)
+                    {
+                        idleTexture = twilightSparkle2;
+                    }
+                    else if (idleHorse == 5)
+                    {
+                        idleTexture = hoofJackman2;
+                    }
+                    else if (idleHorse == 6)
+                    {
+                        idleTexture = shadowfax2;
+                    }
+                    else if (idleHorse == 7)
+                    {
+                        idleTexture = ponyStark2;
+                    }
+                    else if (idleHorse == 8)
+                    {
+                        idleTexture = potoooooooo2;
+                    }
+                }
+                else if (idleAnimation >= 0.2f && idleAnimation < 0.3f)
+                {
+                    if (idleHorse == 1)
+                    {
+                        idleTexture = stormfuhr3;
+                    }
+                    else if (idleHorse == 2)
+                    {
+                        idleTexture = beyonceneigh3;
+                    }
+                    else if (idleHorse == 3)
+                    {
+                        idleTexture = greasedLightning3;
+                    }
+                    else if (idleHorse == 4)
+                    {
+                        idleTexture = twilightSparkle3;
+                    }
+                    else if (idleHorse == 5)
+                    {
+                        idleTexture = hoofJackman3;
+                    }
+                    else if (idleHorse == 6)
+                    {
+                        idleTexture = shadowfax3;
+                    }
+                    else if (idleHorse == 7)
+                    {
+                        idleTexture = ponyStark3;
+                    }
+                    else if (idleHorse == 8)
+                    {
+                        idleTexture = potoooooooo3;
+                    }
+                }
+                else if (idleAnimation >= 0.3f && idleAnimation < 0.4f)
+                {
+                    if (idleHorse == 1)
+                    {
+                        idleTexture = stormfuhr4;
+                    }
+                    else if (idleHorse == 2)
+                    {
+                        idleTexture = beyonceneigh4;
+                    }
+                    else if (idleHorse == 3)
+                    {
+                        idleTexture = greasedLightning4;
+                    }
+                    else if (idleHorse == 4)
+                    {
+                        idleTexture = twilightSparkle4;
+                    }
+                    else if (idleHorse == 5)
+                    {
+                        idleTexture = hoofJackman4;
+                    }
+                    else if (idleHorse == 6)
+                    {
+                        idleTexture = shadowfax4;
+                    }
+                    else if (idleHorse == 7)
+                    {
+                        idleTexture = ponyStark4;
+                    }
+                    else if (idleHorse == 8)
+                    {
+                        idleTexture = potoooooooo4;
+                    }
+                }
+                else if (idleAnimation >= 0.4f && idleAnimation < 0.5f)
+                {
+                    if (idleHorse == 1)
+                    {
+                        idleTexture = stormfuhr5;
+                    }
+                    else if (idleHorse == 2)
+                    {
+                        idleTexture = beyonceneigh5;
+                    }
+                    else if (idleHorse == 3)
+                    {
+                        idleTexture = greasedLightning5;
+                    }
+                    else if (idleHorse == 4)
+                    {
+                        idleTexture = twilightSparkle5;
+                    }
+                    else if (idleHorse == 5)
+                    {
+                        idleTexture = hoofJackman5;
+                    }
+                    else if (idleHorse == 6)
+                    {
+                        idleTexture = shadowfax5;
+                    }
+                    else if (idleHorse == 7)
+                    {
+                        idleTexture = ponyStark5;
+                    }
+                    else if (idleHorse == 8)
+                    {
+                        idleTexture = potoooooooo5;
+                    }
+                }
+                else
+                {
+                    idleAnimation = 0;
+                }
             }
-            if (screen == Screen.SelectHorse)
+
+            else if (screen == Screen.SelectHorse)
             {
                 backgroundTexture = background2;
 
@@ -582,6 +795,8 @@ namespace Casino_Game
             }
             else if (screen == Screen.Race)
             {
+                backgroundTexture = raceTrack;
+
                 if (countdownTime < 4)
                 {
                     countdownTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -967,6 +1182,9 @@ namespace Casino_Game
                             && prevMouseState.LeftButton == ButtonState.Released)
                         {
                             screen = Screen.Idle;
+
+                            //Reset idle screen
+                            idleRect = new Rectangle(-638, 0, 425, 300);
                         }
                         else if (continueButtonRect.Contains(mouseState.Position))
                         {
@@ -992,8 +1210,15 @@ namespace Casino_Game
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(backgroundTexture, backgroundRect, Color.White);
-
-            if (screen == Screen.SelectHorse)
+            
+            if (screen == Screen.Idle)
+            {
+                _spriteBatch.Draw(idleTexture, idleRect, Color.White);
+                _spriteBatch.DrawString(largeFont, "Welcome to", new Vector2(725, 275), Color.White);
+                _spriteBatch.DrawString(XLFont, "Ready, Bet, GO!", new Vector2(375, 375), Color.White);
+                _spriteBatch.DrawString(smallFont, "House balance: " + houseBalance.ToString(), new Vector2(10, 935), Color.White);
+            }
+            else if (screen == Screen.SelectHorse)
             {
                 _spriteBatch.DrawString(largeFont, "Select a horse to bet on", new Vector2(420, 125), Color.White);
 
