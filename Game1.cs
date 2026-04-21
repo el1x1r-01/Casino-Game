@@ -86,7 +86,8 @@ namespace Casino_Game
         //Betting system
         int houseBalance,
             betAmount,
-            horseSelected;
+            horseSelected,
+            deductionCount;
 
         //Horses
         Rectangle stormfuhrRect,
@@ -131,8 +132,7 @@ namespace Casino_Game
                 potoooooooo4, potoooooooo5;
 
         //Race
-        string countdownString,
-            raceTimeString,
+        string raceTimeString,
             leaderboardString;
 
         int countdownTimer,
@@ -163,6 +163,14 @@ namespace Casino_Game
         Boolean firstPlaceSet,
             secondPlaceSet,
             thirdPlaceSet;
+
+        //Sound Effects
+        SoundEffect click;
+
+        SoundEffectInstance idleMusic,
+            selectionMusic,
+            startTrumpet,
+            raceHooves;
 
         public Game1()
         {
@@ -223,9 +231,9 @@ namespace Casino_Game
             houseBalance = 1000;
             betAmount = 0;
             horseSelected = 0;
+            deductionCount = 0;
 
             //Race
-            countdownString = "3";
             raceTimeString = "0";
             leaderboardString = "";
 
@@ -348,6 +356,13 @@ namespace Casino_Game
             potoooooooo4 = Content.Load<Texture2D>("potoooooooo3");
             potoooooooo5 = Content.Load<Texture2D>("potoooooooo4");
             potooooooooTexture = potoooooooo1;
+
+            //Sound Effects
+            idleMusic = Content.Load<SoundEffect>("music_for_creators-cowboy-country-136896").CreateInstance();
+            selectionMusic = Content.Load<SoundEffect>("abydos_music-sport-epic-race-30-sec-edit-234477").CreateInstance();
+
+            startTrumpet = Content.Load<SoundEffect>("startTrumpet").CreateInstance();
+            raceHooves = Content.Load<SoundEffect>("hooves").CreateInstance();
         }
 
         protected override void Update(GameTime gameTime)
@@ -370,9 +385,9 @@ namespace Casino_Game
                 //Reset selection and betting
                 betAmount = 0;
                 horseSelected = 0;
+                deductionCount = 0;
 
                 //Reset race
-                countdownString = "3";
                 raceTimeString = "0";
 
                 finishLineRect = new Rectangle((window.Width + 150), 0, 150, window.Height);
@@ -600,11 +615,15 @@ namespace Casino_Game
                 {
                     idleAnimation = 0;
                 }
+
+                idleMusic.Play();
             }
 
             else if (screen == Screen.SelectHorse)
             {
                 backgroundTexture = background2;
+                idleMusic.Stop();
+                selectionMusic.Play();
 
                 if (horse1Rect.Contains(mouseState.Position) && mouseState.LeftButton == ButtonState.Pressed
                     && prevMouseState.LeftButton == ButtonState.Released)
@@ -796,16 +815,18 @@ namespace Casino_Game
             else if (screen == Screen.Race)
             {
                 backgroundTexture = raceTrack;
+                selectionMusic.Stop();
 
-                if (countdownTime < 4)
+                countdownTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (countdownTime < 8)
                 {
-                    countdownTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                    countdownTimer = (3 - (int)countdownTime);
-                    countdownString = countdownTimer.ToString();
+                    startTrumpet.Play();
                 }
                 else
                 {
+                    raceHooves.Play();
+
                     elapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (elapsedTime <= 30)
                     {
@@ -1158,30 +1179,37 @@ namespace Casino_Game
 
                     else if (firstPlaceSet && secondPlaceSet && thirdPlaceSet)
                     {
-                        if (firstPlace == horseSelected)
+                        if (deductionCount < 1)
                         {
-                            leaderboardString = (betAmount * 3).ToString();
-                            houseBalance -= (betAmount * 3);
-                        }
-                        else if (secondPlace == horseSelected)
-                        {
-                            leaderboardString = (betAmount * 2).ToString();
-                            houseBalance -= (betAmount * 2);
-                        }
-                        else if (thirdPlace == horseSelected)
-                        {
-                            leaderboardString = betAmount.ToString();
-                            houseBalance -= betAmount;
-                        }
-                        else
-                        {
-                            leaderboardString = "0";
-                        }
+                            deductionCount++;
 
+                            if (firstPlace == horseSelected)
+                            {
+                                leaderboardString = (betAmount * 3).ToString();
+                                houseBalance -= (betAmount * 3);
+                            }
+                            else if (secondPlace == horseSelected)
+                            {
+                                leaderboardString = (betAmount * 2).ToString();
+                                houseBalance -= (betAmount * 2);
+                            }
+                            else if (thirdPlace == horseSelected)
+                            {
+                                leaderboardString = betAmount.ToString();
+                                houseBalance -= betAmount;
+                            }
+                            else
+                            {
+                                leaderboardString = "0";
+                            }
+                        }
+                        
                         if (continueButtonRect.Contains(mouseState.Position) && mouseState.LeftButton == ButtonState.Pressed
                             && prevMouseState.LeftButton == ButtonState.Released)
                         {
                             screen = Screen.Idle;
+
+                            raceHooves.Stop();
 
                             //Reset idle screen
                             idleRect = new Rectangle(-638, 0, 425, 300);
@@ -1285,12 +1313,6 @@ namespace Casino_Game
                 _spriteBatch.Draw(ponyStarkTexture, ponyStarkRect, Color.White);
                 _spriteBatch.Draw(potooooooooTexture, potooooooooRect, Color.White);
 
-                if (countdownTimer >= 0 && countdownTimer <= 3)
-                {
-                    _spriteBatch.DrawString(XLFont, countdownString, new Vector2(900, 400), Color.White);
-                }
-                else
-                {
                     _spriteBatch.DrawString(mediumFont, raceTimeString, new Vector2(10, 900), Color.White);
 
                     _spriteBatch.Draw(selectionButtonTexture, new Rectangle(1550, 900, 332, 60), Color.White);
@@ -1298,7 +1320,7 @@ namespace Casino_Game
                     _spriteBatch.DrawString(smallFont, horseSelectedString, new Vector2(1615, 916), Color.White);
                     _spriteBatch.DrawString(smallFont, "Cheer for", new Vector2(1400, 916), Color.White);
                     _spriteBatch.DrawString(smallFont, "!", new Vector2(1890, 916), Color.White);
-                }
+                
 
                 if (firstPlaceSet && secondPlaceSet && thirdPlaceSet)
                 {

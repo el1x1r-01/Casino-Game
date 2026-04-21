@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin abydos_music-sport-epic-race-30-sec-edit-234477.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:abydos_music-sport-epic-race-30-sec-edit-234477.wav
+
 #begin beyonceneigh0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -232,6 +238,12 @@
 /processorParam:TextureFormat=Color
 /build:hoofjackman4.png
 
+#begin hooves.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:hooves.wav
+
 #begin largeFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -269,6 +281,12 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:mediumFont.spritefont
+
+#begin music_for_creators-cowboy-country-136896.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:music_for_creators-cowboy-country-136896.wav
 
 #begin ponystark0.png
 /importer:TextureImporter
@@ -576,6 +594,12 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:smallFont.spritefont
+
+#begin startTrumpet.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:startTrumpet.wav
 
 #begin stormfuhr0.png
 /importer:TextureImporter
